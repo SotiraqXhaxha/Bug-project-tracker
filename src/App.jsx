@@ -9,6 +9,7 @@ import Kanban from './pages/Kanban';
 import Team from './pages/Team';
 import About from './pages/About';
 import Login from './pages/Login';
+import Profile from './pages/Profile';
 import {
   clearCurrentUser,
   initializeUsers,
@@ -19,9 +20,11 @@ import {
   saveCurrentUser,
   saveProjects,
   saveTasks,
+  saveUsers,
 } from './utils/localStorage';
 
 function AppShell() {
+  // State kryesore te app
   const [theme, setTheme] = useState('dark');
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
@@ -29,6 +32,7 @@ function AppShell() {
   const [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
 
+  // Ngarkim fillestar nga storage
   useEffect(() => {
     const savedTheme = localStorage.getItem('bpt_theme');
     if (savedTheme === 'light' || savedTheme === 'dark') setTheme(savedTheme);
@@ -40,15 +44,18 @@ function AppShell() {
     setTasks(loadTasks());
   }, []);
 
+  // Ruan temen aktive
   useEffect(() => {
     localStorage.setItem('bpt_theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  // Ruajtje e projekteve
   useEffect(() => {
     saveProjects(projects);
   }, [projects]);
 
+  // Ruajtje e taskeve
   useEffect(() => {
     saveTasks(tasks);
   }, [tasks]);
@@ -57,16 +64,37 @@ function AppShell() {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
+  // Login dhe redirect
   const handleLogin = (user) => {
     saveCurrentUser(user);
     setCurrentUser(user);
     navigate('/dashboard');
   };
 
+  // Logout dhe pastrim
   const handleLogout = () => {
     clearCurrentUser();
     setCurrentUser(null);
     navigate('/login');
+  };
+
+  // Perditeson emrin e profilit
+  const handleProfileNameSave = (nextName) => {
+    if (!currentUser) return;
+
+    const trimmedName = nextName.trim();
+    if (!trimmedName) return;
+
+    const updatedUsers = users.map((user) =>
+      user.id === currentUser.id ? { ...user, name: trimmedName } : user
+    );
+
+    const updatedCurrentUser = { ...currentUser, name: trimmedName };
+
+    setUsers(updatedUsers);
+    setCurrentUser(updatedCurrentUser);
+    saveUsers(updatedUsers);
+    saveCurrentUser(updatedCurrentUser);
   };
 
   return (
@@ -81,6 +109,7 @@ function AppShell() {
       )}
 
       <main className="app-main">
+        {/* Seksioni i rrugeve */}
         <Routes>
           <Route
             path="/login"
@@ -90,6 +119,7 @@ function AppShell() {
           <Route
             path="/dashboard"
             element={
+              // Mbrojtje route me user
               <ProtectedRoute currentUser={currentUser}>
                 <Dashboard
                   projects={projects}
@@ -104,6 +134,7 @@ function AppShell() {
           <Route
             path="/projects"
             element={
+              // Mbrojtje route me user
               <ProtectedRoute currentUser={currentUser}>
                 <Projects
                   projects={projects}
@@ -119,6 +150,7 @@ function AppShell() {
           <Route
             path="/tasks"
             element={
+              // Mbrojtje route me user
               <ProtectedRoute currentUser={currentUser}>
                 <Tasks
                   projects={projects}
@@ -134,6 +166,7 @@ function AppShell() {
           <Route
             path="/kanban"
             element={
+              // Mbrojtje route me user
               <ProtectedRoute currentUser={currentUser}>
                 <Kanban
                   projects={projects}
@@ -149,6 +182,7 @@ function AppShell() {
           <Route
             path="/team"
             element={
+              // Mbrojtje route me user
               <ProtectedRoute currentUser={currentUser}>
                 <Team users={users} tasks={tasks} />
               </ProtectedRoute>
@@ -156,8 +190,22 @@ function AppShell() {
           />
 
           <Route
+            path="/profile"
+            element={
+              // Mbrojtje route me user
+              <ProtectedRoute currentUser={currentUser}>
+                <Profile
+                  currentUser={currentUser}
+                  onSaveName={handleProfileNameSave}
+                />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/about"
             element={
+              // Mbrojtje route me user
               <ProtectedRoute currentUser={currentUser}>
                 <About />
               </ProtectedRoute>

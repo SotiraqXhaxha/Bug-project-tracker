@@ -3,31 +3,36 @@ import TaskForm from '../components/TaskForm';
 import TaskCard from '../components/TaskCard';
 
 function Tasks({ projects, tasks, users, setTasks, currentUser }) {
+  // State per tasket
   const [editingTask, setEditingTask] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [priorityFilter, setPriorityFilter] = useState('All');
+  // Kontrollon rolin e userit
   const isLeader = currentUser.role === 'Leader';
 
   const developers = users.filter((user) => user.role === 'Developer');
 
+  // Krijon mape te shpejta
   const projectMap = useMemo(
     () => projects.reduce((acc, project) => ({ ...acc, [project.id]: project.name }), {}),
     [projects]
   );
 
+  // Krijon mape te userave
   const userMap = useMemo(
     () => users.reduce((acc, user) => ({ ...acc, [user.id]: user.name }), {}),
     [users]
   );
 
+  // Krijon ose editon task
   const handleSubmitTask = (taskData) => {
     if (editingTask) {
       setTasks((prev) =>
         prev.map((task) => {
           if (task.id !== editingTask.id) return task;
 
-          // Role-based edit permissions on task update.
+          // Kontrollon rolin e userit
           if (isLeader) {
             return {
               ...task,
@@ -66,18 +71,20 @@ function Tasks({ projects, tasks, users, setTasks, currentUser }) {
     setTasks((prev) => [newTask, ...prev]);
   };
 
+  // Fshin taskun nga lista
   const handleDeleteTask = (taskId) => {
     if (!isLeader) return;
     setTasks((prev) => prev.filter((task) => task.id !== taskId));
     if (editingTask?.id === taskId) setEditingTask(null);
   };
 
+  // Ndryshon statusin e taskut
   const handleStatusChange = (taskId, nextStatus) => {
     setTasks((prev) =>
       prev.map((task) => {
         if (task.id !== taskId) return task;
 
-        // Leader can move any task. Developer can move only own tasks.
+        // Kufizim sipas rolit
         if (!isLeader && task.assignedTo !== currentUser.id) {
           return task;
         }
@@ -87,10 +94,12 @@ function Tasks({ projects, tasks, users, setTasks, currentUser }) {
     );
   };
 
+  // Shfaq tasket sipas rolit
   const visibleTasks = isLeader
     ? tasks
     : tasks.filter((task) => task.assignedTo === currentUser.id);
 
+  // Filtron tasket
   const filteredTasks = visibleTasks.filter((task) => {
     const query = searchQuery.toLowerCase().trim();
     const matchesQuery =

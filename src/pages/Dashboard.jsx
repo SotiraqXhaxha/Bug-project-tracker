@@ -2,17 +2,20 @@
 import StatsCard from '../components/StatsCard';
 
 function Dashboard({ projects, tasks, users, currentUser }) {
+  // Kontrollon rolin e userit
   const isLeader = currentUser.role === 'Leader';
 
-  // Role-based data visibility: developer only sees their own assigned tasks.
+  // Shfaq tasket sipas rolit
   const visibleTasks = isLeader
     ? tasks
     : tasks.filter((task) => task.assignedTo === currentUser.id);
 
+  // Statistikat kryesore
   const todoCount = visibleTasks.filter((task) => task.status === 'To Do').length;
   const progressCount = visibleTasks.filter((task) => task.status === 'In Progress').length;
   const doneCount = visibleTasks.filter((task) => task.status === 'Done').length;
 
+  // Numron tasket per developer
   const tasksByDeveloper = useMemo(() => {
     const developers = users.filter((user) => user.role === 'Developer');
     return developers.map((dev) => ({

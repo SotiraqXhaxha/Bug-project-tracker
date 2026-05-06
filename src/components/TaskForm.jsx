@@ -18,8 +18,10 @@ function TaskForm({
   currentUser,
   isLeader,
 }) {
+  // State e formes
   const [formData, setFormData] = useState(buildDefaultTask(projects, developers));
 
+  // Mbush formen ne edit
   useEffect(() => {
     if (editingTask) {
       setFormData({
@@ -41,11 +43,12 @@ function TaskForm({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Submit i taskut
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!formData.title.trim() || !formData.projectId || !formData.assignedTo) return;
 
-    // Role-based payload: developers can only update description/status on their own task.
+    // Kufizim sipas rolit
     if (!isLeader && editingTask) {
       onSubmit({
         description: formData.description.trim(),
@@ -68,6 +71,7 @@ function TaskForm({
     }
   };
 
+  // Kontrollon pronarin e taskut
   const isDeveloperEditingOwnTask =
     !isLeader && editingTask && editingTask.assignedTo === currentUser.id;
 
