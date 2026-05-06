@@ -3,9 +3,12 @@ import ProjectForm from '../components/ProjectForm';
 import ProjectCard from '../components/ProjectCard';
 
 function Projects({ projects, tasks, setProjects, setTasks, currentUser }) {
+  // State per editim
   const [editingProject, setEditingProject] = useState(null);
+  // Kontrollon rolin e userit
   const isLeader = currentUser.role === 'Leader';
 
+  // Krijon ose perditeson projekt
   const handleSubmitProject = (projectData) => {
     if (!isLeader) return;
 
@@ -30,6 +33,7 @@ function Projects({ projects, tasks, setProjects, setTasks, currentUser }) {
     setProjects((prev) => [newProject, ...prev]);
   };
 
+  // Fshin projekt dhe taske
   const handleDeleteProject = (projectId) => {
     if (!isLeader) return;
 

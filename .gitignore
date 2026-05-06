@@ -11,6 +11,14 @@ node_modules
 dist
 dist-ssr
 *.local
+.vite
+tmp_frames
+*.tmp
+*.temp
+*.cache
+cache/
+deps_temp*/
+devserver*.log
 
 # Editor directories and files
 .vscode/*

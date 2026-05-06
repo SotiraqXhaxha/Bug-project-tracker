@@ -4,6 +4,7 @@ import TaskCard from '../components/TaskCard';
 const columns = ['To Do', 'In Progress', 'Done'];
 
 function Kanban({ projects, tasks, users, setTasks, currentUser }) {
+  // Kontrollon rolin e userit
   const isLeader = currentUser.role === 'Leader';
 
   const projectMap = useMemo(
@@ -16,11 +17,12 @@ function Kanban({ projects, tasks, users, setTasks, currentUser }) {
     [users]
   );
 
-  // Role-based visibility: developers only see their assigned tasks in Kanban.
+  // Shfaq tasket sipas rolit
   const visibleTasks = isLeader
     ? tasks
     : tasks.filter((task) => task.assignedTo === currentUser.id);
 
+  // Grupon tasket me status
   const groupedTasks = useMemo(() => {
     return columns.reduce((acc, column) => {
       acc[column] = visibleTasks.filter((task) => task.status === column);
@@ -28,12 +30,13 @@ function Kanban({ projects, tasks, users, setTasks, currentUser }) {
     }, {});
   }, [visibleTasks]);
 
+  // Ndryshon statusin e taskut
   const handleStatusChange = (taskId, nextStatus) => {
     setTasks((prev) =>
       prev.map((task) => {
         if (task.id !== taskId) return task;
 
-        // Leader can move any task. Developer can move only their own assigned tasks.
+        // Kufizim sipas rolit
         if (!isLeader && task.assignedTo !== currentUser.id) return task;
         return { ...task, status: nextStatus };
       })

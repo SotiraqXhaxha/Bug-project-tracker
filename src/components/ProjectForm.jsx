@@ -3,8 +3,10 @@
 const emptyProject = { name: '', description: '', status: 'Active' };
 
 function ProjectForm({ onSubmit, editingProject, onCancel }) {
+  // State e formes
   const [formData, setFormData] = useState(emptyProject);
 
+  // Mbush formen ne edit
   useEffect(() => {
     if (editingProject) {
       setFormData({
@@ -23,6 +25,7 @@ function ProjectForm({ onSubmit, editingProject, onCancel }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Submit i projektit
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!formData.name.trim()) return;

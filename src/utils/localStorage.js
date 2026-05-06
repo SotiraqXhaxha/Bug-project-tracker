@@ -42,6 +42,7 @@ const demoUsers = [
 ];
 
 const parseData = (value) => {
+  // Parse i sigurt JSON
   if (!value) return null;
   try {
     return JSON.parse(value);
@@ -51,6 +52,7 @@ const parseData = (value) => {
 };
 
 export const initializeUsers = () => {
+  // Vendos userat demo
   const existing = parseData(localStorage.getItem(USERS_KEY));
   if (!Array.isArray(existing) || existing.length === 0) {
     localStorage.setItem(USERS_KEY, JSON.stringify(demoUsers));
@@ -60,37 +62,50 @@ export const initializeUsers = () => {
 };
 
 export const loadUsers = () => {
+  // Merr userat nga storage
   const parsed = parseData(localStorage.getItem(USERS_KEY));
   return Array.isArray(parsed) ? parsed : [];
 };
 
+export const saveUsers = (users) => {
+  // Ruan userat ne storage
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+};
+
 export const loadCurrentUser = () => {
+  // Merr userin aktiv
   const parsed = parseData(localStorage.getItem(CURRENT_USER_KEY));
   return parsed && parsed.id ? parsed : null;
 };
 
 export const saveCurrentUser = (user) => {
+  // Ruan userin aktiv
   localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
 };
 
 export const clearCurrentUser = () => {
+  // Fshin userin aktiv
   localStorage.removeItem(CURRENT_USER_KEY);
 };
 
 export const loadProjects = () => {
+  // Merr projektet nga storage
   const parsed = parseData(localStorage.getItem(PROJECTS_KEY));
   return Array.isArray(parsed) ? parsed : [];
 };
 
 export const saveProjects = (projects) => {
+  // Ruan projektet ne storage
   localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
 };
 
 export const loadTasks = () => {
+  // Merr tasket nga storage
   const parsed = parseData(localStorage.getItem(TASKS_KEY));
   return Array.isArray(parsed) ? parsed : [];
 };
 
 export const saveTasks = (tasks) => {
+  // Ruan tasket ne storage
   localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
 };
