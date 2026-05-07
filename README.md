@@ -1,6 +1,6 @@
 ﻿# Bug Project Tracker
 
-Bug Project Tracker is a frontend-only React application built with Vite. It provides a mini Jira/Trello-style workflow for a 5-person team with role-based access using LocalStorage only.
+Bug Project Tracker is a frontend-only React application built with Vite. It provides a mini workflow for a 5-person team with role-based access using LocalStorage only.
 
 ## Technologies
 
