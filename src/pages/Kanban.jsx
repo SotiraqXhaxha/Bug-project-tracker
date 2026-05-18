@@ -46,6 +46,7 @@ function Kanban({ projects, tasks, users, setTasks, currentUser }) {
   return (
     <section>
       <div className="page-header">
+
         <h2>Kanban Board</h2>
         <p>{isLeader ? 'All team tasks by status.' : 'Your assigned tasks by status.'}</p>
       </div>

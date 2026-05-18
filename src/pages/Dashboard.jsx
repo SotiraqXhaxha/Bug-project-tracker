@@ -12,6 +12,7 @@ function Dashboard({ projects, tasks, users, currentUser }) {
 
   // Statistikat kryesore
   const todoCount = visibleTasks.filter((task) => task.status === 'To Do').length;
+
   const progressCount = visibleTasks.filter((task) => task.status === 'In Progress').length;
   const doneCount = visibleTasks.filter((task) => task.status === 'Done').length;
 
